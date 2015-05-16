@@ -35,11 +35,10 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
         ivImage.setImageResource(0);
 
         //populate
-        //tvTitle.setText(imageInfo.title);
         tvTitle.setText(Html.fromHtml(imageInfo.title));
 
         // Remotely download image
-        Picasso.with(getContext()).load(imageInfo.thumbUrl).into(ivImage);
+        Picasso.with(getContext()).load(imageInfo.thumbUrl).fit().centerCrop().into(ivImage);
         return convertView;
     }
 }
