@@ -1,16 +1,19 @@
 package com.codepath.gridimagesearch.mainsearch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import com.codepath.gridimagesearch.R;
+import com.codepath.gridimagesearch.imagedetail.ImageDisplayActivity;
 import com.codepath.gridimagesearch.images.ImageResult;
 import com.codepath.gridimagesearch.images.ImageResultsAdapter;
 import com.loopj.android.http.AsyncHttpClient;
@@ -72,6 +75,24 @@ public class SearchActivity extends ActionBarActivity {
     private void setupViews() {
         etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
+
+        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // launch the image display activity
+                // create intent (inside anonymous class so this refers to anonymous class)
+                Intent i = new Intent(SearchActivity.this, ImageDisplayActivity.class);
+
+                // get the image result to display
+                ImageResult result = imageResults.get(position);
+
+                // pass image result into intent (Serializable or Parcelable)
+                i.putExtra("result", result);
+
+                // Launch the new activity
+                startActivity(i);
+            }
+        });
     }
 
     // Fired when button is pressed
