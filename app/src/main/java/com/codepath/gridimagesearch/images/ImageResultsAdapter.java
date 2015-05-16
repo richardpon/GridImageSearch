@@ -16,6 +16,11 @@ import java.util.List;
 
 public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
 
+    // View Holder cache
+    private static class ViewHolder {
+        ImageView image;
+        TextView title;
+    }
 
     public ImageResultsAdapter(Context context, List<ImageResult> images) {
         super(context, R.layout.item_image_result, images);
@@ -23,22 +28,26 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageResult imageInfo = getItem(position);
+        ImageResult imageResult = getItem(position);
 
+        ViewHolder viewHolder;
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_image_result, parent, false);
+
+            viewHolder.image = (ImageView) convertView.findViewById(R.id.ivImage);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.tvTitle);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
 
         //Clear out the image
-        ivImage.setImageResource(0);
+        viewHolder.image.setImageResource(0);
 
-        //populate
-        tvTitle.setText(Html.fromHtml(imageInfo.title));
-
-        // Remotely download image
-        Picasso.with(getContext()).load(imageInfo.thumbUrl).fit().centerCrop().into(ivImage);
+        //populate views
+        viewHolder.title.setText(Html.fromHtml(imageResult.title));
+        Picasso.with(getContext()).load(imageResult.thumbUrl).fit().centerCrop().into(viewHolder.image);
         return convertView;
     }
 }
