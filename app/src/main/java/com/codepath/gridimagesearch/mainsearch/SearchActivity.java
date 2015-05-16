@@ -3,26 +3,18 @@ package com.codepath.gridimagesearch.mainsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.imagedetail.ImageDisplayActivity;
+import com.codepath.gridimagesearch.images.GoogleApiClient;
 import com.codepath.gridimagesearch.images.ImageResult;
 import com.codepath.gridimagesearch.images.ImageResultsAdapter;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -34,6 +26,7 @@ public class SearchActivity extends ActionBarActivity {
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +40,8 @@ public class SearchActivity extends ActionBarActivity {
         aImageResults = new ImageResultsAdapter(this, imageResults);
         //link adapter to gridview
         gvResults.setAdapter(aImageResults);
+
+        googleApiClient = new GoogleApiClient(this);
     }
 
 
@@ -99,37 +94,16 @@ public class SearchActivity extends ActionBarActivity {
     public void onImageSearch(View v) {
         String query = etQuery.getText().toString();
 
-        Toast.makeText(this, "searching "+query, Toast.LENGTH_SHORT).show();
-
-        //https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=android&rsz=8
-        String searchUrl = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q="+query;
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(searchUrl, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d(TAG, response.toString());
-
-                JSONArray imageResultsJson = null;
-                try {
-                    imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-
-                    //clear existing images (for new search)
-                    imageResults.clear();
-
-                    //when make changes to adapter, it does modify the underlying data
-                    aImageResults.addAll(ImageResult.fromJSONArray(imageResultsJson));
-
-                    //aImageResults.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.i(TAG, imageResults.toString());
-            }
-        });
-
-
+        googleApiClient.doImageSearch(query);
     }
 
+    /**
+     * @param newImageResults ArrayList<ImageResult>
+     * @return void
+     */
+    public void setImages(ArrayList<ImageResult> newImageResults) {
+        imageResults.clear();
+        aImageResults.addAll(newImageResults);
+    }
 
 }
