@@ -1,9 +1,13 @@
 package com.codepath.gridimagesearch.settings;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.codepath.gridimagesearch.R;
 
@@ -15,6 +19,9 @@ public class SettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_settings);
         //getSupportActionBar().hide();
         getSupportActionBar().setTitle(R.string.settings_action_bar_label);
+
+
+        //setCurrentSettings();
     }
 
 
@@ -39,4 +46,37 @@ public class SettingsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Persists the image filters into the app's preferences and indicates back to the Search Activity
+     * whether or not any preference has changed
+     *
+     * @param view View
+     */
+    public void saveSettings(View view) {
+
+        // Get each setting
+        Spinner sSelectSize = (Spinner) findViewById(R.id.sSelectSize);
+        String size = sSelectSize.getSelectedItem().toString();
+
+        Spinner sSelectColor = (Spinner) findViewById(R.id.sSelectColor);
+        String color = sSelectColor.getSelectedItem().toString();
+
+        Spinner sSelectType = (Spinner) findViewById(R.id.sSelectType);
+        String type = sSelectType.getSelectedItem().toString();
+
+        EditText etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
+        String site = etSiteFilter.getText().toString();
+
+        // Save settings and see if any has changed
+        SettingsModel settingsModel = new SettingsModel(this);
+        Boolean hasChanged = settingsModel.savePreferences(size, color, type, site);
+
+        Intent returnData = new Intent();
+        returnData.putExtra("hasChanged", hasChanged);
+
+        setResult(RESULT_OK, returnData);
+        finish();
+    }
+
 }

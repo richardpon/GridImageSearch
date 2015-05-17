@@ -3,7 +3,6 @@ package com.codepath.gridimagesearch.mainsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +28,8 @@ public class SearchActivity extends ActionBarActivity {
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
     private GoogleApiClient googleApiClient;
+
+    private final int REQUEST_CODE_OPEN_SETTINGS = 122;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,10 @@ public class SearchActivity extends ActionBarActivity {
 
     // Fired when button is pressed
     public void onImageSearch(View v) {
+        performNewImageSearch();
+    }
+
+    public void performNewImageSearch() {
         String query = etQuery.getText().toString();
 
         googleApiClient.doImageSearch(query);
@@ -115,10 +120,17 @@ public class SearchActivity extends ActionBarActivity {
 
     public void openSearchSettings(MenuItem menuItem) {
         Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-        Log.i(TAG, "search!");
-        Log.i(TAG, "search!#@$");
 
+        startActivityForResult(i, REQUEST_CODE_OPEN_SETTINGS);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_OPEN_SETTINGS) {
+            boolean hasChanged = data.getExtras().getBoolean("hasChanged");
+            if (hasChanged) {
+                performNewImageSearch();
+            }
+        }
+    }
 }

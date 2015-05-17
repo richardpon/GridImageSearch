@@ -121,6 +121,7 @@
         android:id="@+id/btnSaveSettings"
         android:layout_below="@+id/etSiteFilter"
         android:layout_centerHorizontal="true"
+        android:onClick="saveSettings"
         android:layout_marginTop="30dp" />
 
 </RelativeLayout>
