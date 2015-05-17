@@ -14,6 +14,8 @@
 
     <!-- Search Action Bar -->
     <string name="search_action_bar_label">Find Images!</string>
+    <string name="search_action_bar_search_title">Search For Images</string>
+    <string name="search_action_bar_settings_title">Search Settings</string>
 
     <!-- Search Menu -->
     <string name="action_settings_label">Search Settings</string>
