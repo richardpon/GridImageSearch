@@ -132,20 +132,11 @@ public class SearchActivity extends ActionBarActivity {
         String type = settingsModel.type;
         String site = settingsModel.site;
 
-        // Different callbacks depending on page
+        // Only need to clear on the first page
         if (page == 0) {
-            googleApiClient.doImageSearchInitial(query, size, color, type, site);
-        } else {
-            googleApiClient.doImageSearchSubsequent(query, size, color, type, site, page);
+            imageResults.clear();
         }
-    }
-
-    /**
-     * @param newImageResults ArrayList<ImageResult>
-     */
-    public void setImages(ArrayList<ImageResult> newImageResults) {
-        imageResults.clear();
-        aImageResults.addAll(newImageResults);
+        googleApiClient.doImageSearch(query, size, color, type, site, page);
     }
 
     /**

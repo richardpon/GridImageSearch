@@ -7,15 +7,15 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ImageResult implements Serializable{
-
-    //private static final long serialVersionUID = -18293719823781973L;
+public class ImageResult implements Serializable {
 
     public String fullUrl;
     public String thumbUrl;
     public String title;
 
-    // new ImageResult( raw item json )
+    /**
+     * @param json JSONObject
+     */
     public ImageResult(JSONObject json) {
         try {
             this.fullUrl = json.getString("url");
@@ -24,11 +24,13 @@ public class ImageResult implements Serializable{
         } catch (JSONException e) {
 
         }
-
     }
 
-    // Take an array of json images and result arrayList of image results
-    // ImageResult.fromJSONArray([...])
+    /**
+     * Take an array of json images and result arrayList of image results
+     * @param array JSONArray
+     * @return ArrayList<ImageResult>
+     */
     public static ArrayList<ImageResult> fromJSONArray(JSONArray array) {
         ArrayList<ImageResult> results = new ArrayList<ImageResult>();
 

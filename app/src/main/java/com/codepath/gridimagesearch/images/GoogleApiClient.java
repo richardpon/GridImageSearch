@@ -2,7 +2,6 @@ package com.codepath.gridimagesearch.images;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.codepath.gridimagesearch.mainsearch.SearchActivity;
 import com.loopj.android.http.AsyncHttpClient;
@@ -28,39 +27,22 @@ public class GoogleApiClient {
         client = new AsyncHttpClient();
     }
 
-    public void doImageSearchInitial(String query, String size, String color, String type, String site) {
-
-        String searchUrl = buildUrl(query, size, color, type, site, 0);
-
-        Log.i(TAG, "searchingUrl="+searchUrl);
-
-        client.get(searchUrl, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //Log.i(TAG, response.toString());
-
-                JSONArray imageResultsJson = null;
-                try {
-                    imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    ((SearchActivity) context).setImages(ImageResult.fromJSONArray(imageResultsJson));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-    }
-
-    public void doImageSearchSubsequent(String query, String size, String color, String type, String site, int page) {
+    /**
+     * Performs api calls to the Google API
+     * @param query string
+     * @param size string
+     * @param color string
+     * @param type string
+     * @param site string
+     * @param page int
+     */
+    public void doImageSearch(String query, String size, String color, String type, String site, int page) {
 
         String searchUrl = buildUrl(query, size, color, type, site, page);
 
-        Log.i(TAG, "searchingUrl="+searchUrl);
-
         client.get(searchUrl, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //Log.i(TAG, response.toString());
 
                 JSONArray imageResultsJson = null;
                 try {
