@@ -2,13 +2,13 @@ package com.codepath.gridimagesearch.mainsearch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
 
 import com.codepath.gridimagesearch.R;
@@ -22,15 +22,14 @@ import com.codepath.gridimagesearch.settings.SettingsModel;
 
 import java.util.ArrayList;
 
-
 public class SearchActivity extends ActionBarActivity {
 
     private static final String TAG = "SearchActivity";
-    private EditText etQuery;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
     private GoogleApiClient googleApiClient;
+    private String query;
 
     private final int REQUEST_CODE_OPEN_SETTINGS = 122;
 
@@ -39,6 +38,7 @@ public class SearchActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         setupViews();
+        query = "";
 
         getSupportActionBar().setTitle(R.string.search_action_bar_label);
 
@@ -60,7 +60,22 @@ public class SearchActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        //MenuItem settingsItem = menu.findItem(R.id.action_settings);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                query = s;
+                performNewImageSearch(0);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
 
         return true;
     }
@@ -80,8 +95,10 @@ public class SearchActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Performs initial view setup
+     */
     private void setupViews() {
-        etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
 
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,13 +120,11 @@ public class SearchActivity extends ActionBarActivity {
         });
     }
 
-    // Fired when button is pressed
-    public void onImageSearch(View v) {
-        performNewImageSearch(0);
-    }
-
+    /**
+     * Performs a new image search with the given page
+     * @param page int
+     */
     public void performNewImageSearch(int page) {
-        String query = etQuery.getText().toString();
 
         SettingsModel settingsModel = new SettingsModel(this);
         String size = settingsModel.size;
@@ -117,39 +132,48 @@ public class SearchActivity extends ActionBarActivity {
         String type = settingsModel.type;
         String site = settingsModel.site;
 
-        Log.i(TAG, "            performing search______________________________");;
-//        Log.i(TAG, "size="+size);
-//        Log.i(TAG, "color="+color);
-//        Log.i(TAG, "type="+type);
-//        Log.i(TAG, "site="+site);
-
+        // Different callbacks depending on page
         if (page == 0) {
             googleApiClient.doImageSearchInitial(query, size, color, type, site);
         } else {
             googleApiClient.doImageSearchSubsequent(query, size, color, type, site, page);
         }
-
     }
 
     /**
      * @param newImageResults ArrayList<ImageResult>
-     * @return void
      */
     public void setImages(ArrayList<ImageResult> newImageResults) {
         imageResults.clear();
         aImageResults.addAll(newImageResults);
     }
 
+    /**
+     * Adds additional image results to the current result set
+     * @param newImageResults ArrayList<ImageResult>
+     */
     public void addImages(ArrayList<ImageResult> newImageResults) {
         aImageResults.addAll(newImageResults);
     }
 
+    /**
+     * Opens the settings activity
+     *
+     * @param menuItem MenuItem
+     */
     public void openSearchSettings(MenuItem menuItem) {
         Intent i = new Intent(this, SettingsActivity.class);
 
         startActivityForResult(i, REQUEST_CODE_OPEN_SETTINGS);
     }
 
+    /**
+     * Called when the settings activity finishes
+     *
+     * @param requestCode int
+     * @param resultCode int
+     * @param data Intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_OPEN_SETTINGS) {
@@ -160,6 +184,9 @@ public class SearchActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Sets up the endless scroll listener
+     */
     protected void setScrollListener() {
         gvResults.setOnScrollListener(new EndlessScrollListener() {
             @Override
