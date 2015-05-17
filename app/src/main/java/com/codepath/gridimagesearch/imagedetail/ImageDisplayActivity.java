@@ -1,5 +1,6 @@
 package com.codepath.gridimagesearch.imagedetail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -12,17 +13,15 @@ import com.squareup.picasso.Picasso;
 
 public class ImageDisplayActivity extends ActionBarActivity {
 
+    private ImageResult imageResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_display);
 
-        //remove actionbar
-        getSupportActionBar().hide();
-
         // Pull out url from intent
-        ImageResult imageResult = (ImageResult) getIntent().getSerializableExtra("result");
-        //String url = getIntent().getStringExtra("url");
+        imageResult = (ImageResult) getIntent().getSerializableExtra("result");
 
         // find image view
         ImageView ivImageResult = (ImageView) findViewById(R.id.ivImageResult);
@@ -53,4 +52,18 @@ public class ImageDisplayActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Called when user wants to share an image.
+     *
+     * @param menuItem MenuItem
+     */
+    public void actionShareImage(MenuItem menuItem) {
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageResult.fullUrl);
+        startActivity(Intent.createChooser(shareIntent, "Share this image using"));
+    }
+
 }
