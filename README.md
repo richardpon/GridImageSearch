@@ -15,3 +15,9 @@ Completed User Stories:
 * [x] Advanced: Images can be shared
 * [x] Bonus: Using StaggeredGridView instead of regular GridView 
 * [x] Extra: Settings persisted to device using Preferences
+
+Walkthrough:
+
+![Video Walkthrough](grid_image_search_walkthrough.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/)
