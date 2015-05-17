@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.imagedetail.ImageDisplayActivity;
@@ -19,13 +18,14 @@ import com.codepath.gridimagesearch.images.ImageResult;
 import com.codepath.gridimagesearch.images.ImageResultsAdapter;
 import com.codepath.gridimagesearch.settings.SettingsActivity;
 import com.codepath.gridimagesearch.settings.SettingsModel;
+import com.etsy.android.grid.StaggeredGridView;
 
 import java.util.ArrayList;
 
 public class SearchActivity extends ActionBarActivity {
 
     private static final String TAG = "SearchActivity";
-    private GridView gvResults;
+    private StaggeredGridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
     private GoogleApiClient googleApiClient;
@@ -99,7 +99,7 @@ public class SearchActivity extends ActionBarActivity {
      * Performs initial view setup
      */
     private void setupViews() {
-        gvResults = (GridView) findViewById(R.id.gvResults);
+        gvResults = (StaggeredGridView) findViewById(R.id.gvResults);
 
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
