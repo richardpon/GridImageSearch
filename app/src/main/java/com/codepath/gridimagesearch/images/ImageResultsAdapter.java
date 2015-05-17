@@ -42,7 +42,7 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
         viewHolder.image.setImageResource(0);
 
         //populate views
-        Picasso.with(getContext()).load(imageResult.thumbUrl).fit().centerCrop().into(viewHolder.image);
+        Picasso.with(getContext()).load(imageResult.thumbUrl).into(viewHolder.image);
         return convertView;
     }
 }
