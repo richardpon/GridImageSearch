@@ -10,10 +10,10 @@ public class SettingsModel {
     private final static String defaultSetting = "any";
     private SharedPreferences prefs;
 
-    private String size;
-    private String color;
-    private String type;
-    private String site;
+    public String size;
+    public String color;
+    public String type;
+    public String site;
 
     private Context context;
 
@@ -24,10 +24,7 @@ public class SettingsModel {
         this.context = context;
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        size = defaultSetting;
-        color = defaultSetting;
-        type = defaultSetting;
-        site = defaultSetting;
+        loadPreferences();
     }
 
     /**
@@ -42,29 +39,32 @@ public class SettingsModel {
         SharedPreferences.Editor edit = prefs.edit();
 
         boolean hasChanged = false;
-        loadPreferences();
 
         // Size
         if (!this.size.equals(size)) {
             edit.putString("size", size);
+            this.size = size;
             hasChanged = true;
         }
 
         // Color
         if (!this.color.equals(color)) {
             edit.putString("color", color);
+            this.color = color;
             hasChanged = true;
         }
 
         // Type
         if (!this.type.equals(type)) {
             edit.putString("type", type);
+            this.type = type;
             hasChanged = true;
         }
 
         // Site
         if (!this.site.equals(site)) {
             edit.putString("site", site);
+            this.site = site;
             hasChanged = true;
         }
 

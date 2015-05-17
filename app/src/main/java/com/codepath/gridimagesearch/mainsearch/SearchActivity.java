@@ -3,6 +3,7 @@ package com.codepath.gridimagesearch.mainsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.codepath.gridimagesearch.images.GoogleApiClient;
 import com.codepath.gridimagesearch.images.ImageResult;
 import com.codepath.gridimagesearch.images.ImageResultsAdapter;
 import com.codepath.gridimagesearch.settings.SettingsActivity;
+import com.codepath.gridimagesearch.settings.SettingsModel;
 
 import java.util.ArrayList;
 
@@ -106,7 +108,19 @@ public class SearchActivity extends ActionBarActivity {
     public void performNewImageSearch() {
         String query = etQuery.getText().toString();
 
-        googleApiClient.doImageSearch(query);
+        SettingsModel settingsModel = new SettingsModel(this);
+        String size = settingsModel.size;
+        String color= settingsModel.color;
+        String type = settingsModel.type;
+        String site = settingsModel.site;
+
+        Log.i(TAG, "            performing search");;
+        Log.i(TAG, "size="+size);
+        Log.i(TAG, "color="+color);
+        Log.i(TAG, "type="+type);
+        Log.i(TAG, "site="+site);
+
+        googleApiClient.doImageSearch(query, size, color, type, site);
     }
 
     /**
