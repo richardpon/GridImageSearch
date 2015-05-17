@@ -4,19 +4,13 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:src="@drawable/abc_ic_voice_search_api_mtrl_alpha"
         android:contentDescription="@string/item_image_content_description"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
+        android:layout_marginBottom="10dp"
         android:id="@+id/ivImage" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/image_title_label"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:id="@+id/tvTitle" />
 </LinearLayout>
