@@ -13,6 +13,7 @@ import android.widget.GridView;
 
 import com.codepath.gridimagesearch.R;
 import com.codepath.gridimagesearch.imagedetail.ImageDisplayActivity;
+import com.codepath.gridimagesearch.images.EndlessScrollListener;
 import com.codepath.gridimagesearch.images.GoogleApiClient;
 import com.codepath.gridimagesearch.images.ImageResult;
 import com.codepath.gridimagesearch.images.ImageResultsAdapter;
@@ -47,6 +48,8 @@ public class SearchActivity extends ActionBarActivity {
         aImageResults = new ImageResultsAdapter(this, imageResults);
         //link adapter to gridview
         gvResults.setAdapter(aImageResults);
+
+        setScrollListener();
 
         googleApiClient = new GoogleApiClient(this);
     }
@@ -102,10 +105,10 @@ public class SearchActivity extends ActionBarActivity {
 
     // Fired when button is pressed
     public void onImageSearch(View v) {
-        performNewImageSearch();
+        performNewImageSearch(0);
     }
 
-    public void performNewImageSearch() {
+    public void performNewImageSearch(int page) {
         String query = etQuery.getText().toString();
 
         SettingsModel settingsModel = new SettingsModel(this);
@@ -114,13 +117,18 @@ public class SearchActivity extends ActionBarActivity {
         String type = settingsModel.type;
         String site = settingsModel.site;
 
-        Log.i(TAG, "            performing search");;
-        Log.i(TAG, "size="+size);
-        Log.i(TAG, "color="+color);
-        Log.i(TAG, "type="+type);
-        Log.i(TAG, "site="+site);
+        Log.i(TAG, "            performing search______________________________");;
+//        Log.i(TAG, "size="+size);
+//        Log.i(TAG, "color="+color);
+//        Log.i(TAG, "type="+type);
+//        Log.i(TAG, "site="+site);
 
-        googleApiClient.doImageSearch(query, size, color, type, site);
+        if (page == 0) {
+            googleApiClient.doImageSearchInitial(query, size, color, type, site);
+        } else {
+            googleApiClient.doImageSearchSubsequent(query, size, color, type, site, page);
+        }
+
     }
 
     /**
@@ -129,6 +137,10 @@ public class SearchActivity extends ActionBarActivity {
      */
     public void setImages(ArrayList<ImageResult> newImageResults) {
         imageResults.clear();
+        aImageResults.addAll(newImageResults);
+    }
+
+    public void addImages(ArrayList<ImageResult> newImageResults) {
         aImageResults.addAll(newImageResults);
     }
 
@@ -143,8 +155,18 @@ public class SearchActivity extends ActionBarActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_OPEN_SETTINGS) {
             boolean hasChanged = data.getExtras().getBoolean("hasChanged");
             if (hasChanged) {
-                performNewImageSearch();
+                performNewImageSearch(0);
             }
         }
     }
+
+    protected void setScrollListener() {
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page) {
+                performNewImageSearch(page);
+            }
+        });
+    }
+
 }
