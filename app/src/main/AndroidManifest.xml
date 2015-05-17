@@ -2,11 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codepath.gridimagesearch" >
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="16" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +33,14 @@
         <activity
             android:name=".imagedetail.ImageDisplayActivity"
             android:label="@string/title_activity_image_display"
+            android:parentActivityName=".mainsearch.SearchActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepath.gridimagesearch.mainsearch.SearchActivity" />
+        </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/title_activity_settings"
             android:parentActivityName=".mainsearch.SearchActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

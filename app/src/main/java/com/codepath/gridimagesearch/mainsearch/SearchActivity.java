@@ -3,6 +3,7 @@ package com.codepath.gridimagesearch.mainsearch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.codepath.gridimagesearch.imagedetail.ImageDisplayActivity;
 import com.codepath.gridimagesearch.images.GoogleApiClient;
 import com.codepath.gridimagesearch.images.ImageResult;
 import com.codepath.gridimagesearch.images.ImageResultsAdapter;
+import com.codepath.gridimagesearch.settings.SettingsActivity;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,8 @@ public class SearchActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search);
         setupViews();
 
+        getSupportActionBar().setTitle(R.string.search_action_bar_label);
+
         //creates datasource
         imageResults = new ArrayList<ImageResult>();
         // attaches adapter
@@ -49,6 +53,9 @@ public class SearchActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        //MenuItem settingsItem = menu.findItem(R.id.action_settings);
+
         return true;
     }
 
@@ -104,6 +111,14 @@ public class SearchActivity extends ActionBarActivity {
     public void setImages(ArrayList<ImageResult> newImageResults) {
         imageResults.clear();
         aImageResults.addAll(newImageResults);
+    }
+
+    public void openSearchSettings(MenuItem menuItem) {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
+        Log.i(TAG, "search!");
+        Log.i(TAG, "search!#@$");
+
     }
 
 }

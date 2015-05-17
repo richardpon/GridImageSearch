@@ -6,10 +6,29 @@
     <string name="search_prompt">Enter search query</string>
     <string name="save_label">Search</string>
 
-
     <!-- Item Image -->
     <string name="item_image_content_description">Image Result</string>
     <string name="image_title_label">Image Title</string>
     <string name="title_activity_image_display">Full Image</string>
+
+    <!-- Search Action Bar -->
+    <string name="search_action_bar_label">Find Images!</string>
+
+    <!-- Search Menu -->
+    <string name="action_settings_label">Search Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Settings-->
+    <string name="settings_action_bar_label">Advanced Settings</string>
+    <string name="spinner_prompt">spinner prompt</string>
+    <string name="settings_select_size_label">Image Size</string>
+    <string name="settings_select_color_label">Color Filter</string>
+    <string name="settings_select_type_label">Image Type</string>
+    <string name="settings_select_site_label">Site Filter</string>
+    <string name="site_filter_hint">everywhere</string>
+
+
+
+
 
 </resources>
