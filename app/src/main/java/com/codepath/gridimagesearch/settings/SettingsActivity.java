@@ -8,10 +8,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.codepath.gridimagesearch.R;
 
 public class SettingsActivity extends ActionBarActivity {
+
+    Spinner sSelectSize;
+    Spinner sSelectColor;
+    Spinner sSelectType;
+    EditText etSiteFilter;
+    SettingsModel settingsModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +27,23 @@ public class SettingsActivity extends ActionBarActivity {
         //getSupportActionBar().hide();
         getSupportActionBar().setTitle(R.string.settings_action_bar_label);
 
+        setupViews();
 
-        //setCurrentSettings();
+        // Load settings from persistent storage
+        settingsModel = new SettingsModel(this);
+
+        setCurrentSettings();
     }
 
+    /**
+     * Get a reference to each view in the corresponding layout
+     */
+    protected void setupViews() {
+        sSelectSize = (Spinner) findViewById(R.id.sSelectSize);
+        sSelectColor = (Spinner) findViewById(R.id.sSelectColor);
+        sSelectType = (Spinner) findViewById(R.id.sSelectType);
+        etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,20 +76,12 @@ public class SettingsActivity extends ActionBarActivity {
     public void saveSettings(View view) {
 
         // Get each setting
-        Spinner sSelectSize = (Spinner) findViewById(R.id.sSelectSize);
         String size = sSelectSize.getSelectedItem().toString();
-
-        Spinner sSelectColor = (Spinner) findViewById(R.id.sSelectColor);
         String color = sSelectColor.getSelectedItem().toString();
-
-        Spinner sSelectType = (Spinner) findViewById(R.id.sSelectType);
         String type = sSelectType.getSelectedItem().toString();
-
-        EditText etSiteFilter = (EditText) findViewById(R.id.etSiteFilter);
         String site = etSiteFilter.getText().toString();
 
         // Save settings and see if any has changed
-        SettingsModel settingsModel = new SettingsModel(this);
         Boolean hasChanged = settingsModel.savePreferences(size, color, type, site);
 
         Intent returnData = new Intent();
@@ -77,6 +89,35 @@ public class SettingsActivity extends ActionBarActivity {
 
         setResult(RESULT_OK, returnData);
         finish();
+    }
+
+    /**
+     * Sets the spinners and the site filter to the current saved state
+     */
+    public void setCurrentSettings() {
+        setSpinnerToValue(sSelectSize, settingsModel.size);
+        setSpinnerToValue(sSelectColor, settingsModel.color);
+        setSpinnerToValue(sSelectType, settingsModel.type);
+
+        if (!settingsModel.site.equals("")) {
+            etSiteFilter.setText(settingsModel.site);
+        }
+    }
+
+    /**
+     * Sets Spinner to given string value
+     * @param spinner Spinner
+     * @param value String
+     */
+    protected void setSpinnerToValue(Spinner spinner, String value) {
+        int index = 0;
+        SpinnerAdapter adapter = spinner.getAdapter();
+        for (int i = 0; i < adapter.getCount() ; i++) {
+            if (adapter.getItem(i).toString().toLowerCase().equals(value.toLowerCase())) {
+                spinner.setSelection(i);
+                return;
+            }
+        }
     }
 
 }
