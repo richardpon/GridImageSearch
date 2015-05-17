@@ -28,14 +28,16 @@ public class GoogleApiClient {
         client = new AsyncHttpClient();
     }
 
-    public void doImageSearch(String query) {
+    public void doImageSearch(String query, String size, String color, String type, String site) {
 
-        String searchUrl = buildUrl(query);
+        String searchUrl = buildUrl(query, size, color, type, site);
+
+        Log.i(TAG, "searchingUrl="+searchUrl);
 
         client.get(searchUrl, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess ( int statusCode, Header[] headers, JSONObject response){
-                Log.d(TAG, response.toString());
+                Log.i(TAG, response.toString());
 
                 JSONArray imageResultsJson = null;
                 try {
@@ -56,9 +58,30 @@ public class GoogleApiClient {
      * @param query String
      * @return String
      */
-    private String buildUrl(String query) {
+    private String buildUrl(String query, String size, String color, String type, String site) {
         String url = baseUrl;
         url += "&q="+query;
+
+        // Set size
+        if (!size.toLowerCase().equals("any")) {
+            url += "&imgsz="+size.toLowerCase();
+        }
+
+        // Set color
+        if (!color.toLowerCase().equals("any")) {
+            url += "&imgcolor="+color.toLowerCase();
+        }
+
+        // Set type
+        if (!type.toLowerCase().equals("any")) {
+            url += "&imgtype="+type.toLowerCase();
+        }
+
+        // Set site
+        if (!site.toLowerCase().equals("")) {
+            url += "&as_sitesearch="+site.toLowerCase();
+        }
+
         return url;
     }
 
